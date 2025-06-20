@@ -1,11 +1,11 @@
 {
-  "name": "SANTIN Soluções em Pintura",
+  "name": "Santin Soluções em Pintura",
   "short_name": "Santin Pintura",
-  "start_url": ".",
+  "start_url": "./",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#f5f5f5",
   "theme_color": "#8e44ad",
-  "orientation": "portrait",
   "icons": [
     {
       "src": "icon.png",
