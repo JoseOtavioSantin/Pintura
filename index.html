@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SANTIN Soluções em Pintura</title>
+  <title>Simulador de Pintura</title>
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#8e44ad" />
   <link rel="apple-touch-icon" href="icon.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <style>
     * { box-sizing: border-box; }
 
@@ -238,9 +239,11 @@
       if (numero) window.open(`https://wa.me/55${numero}?text=${mensagem}`, '_blank');
     }
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js')
-        .then(() => console.log("Service Worker registrado com sucesso."))
-        .catch(error => console.error("Erro ao registrar Service Worker:", error));
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(() => console.log("Service Worker registrado com sucesso."))
+          .catch(error => console.error("Erro ao registrar Service Worker:", error));
+      });
     }
   </script>
 </body>
