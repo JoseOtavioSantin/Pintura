@@ -7,7 +7,6 @@
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#8e44ad" />
   <link rel="apple-touch-icon" href="icon.png">
-  <link rel="apple-touch-startup-image" href="splash.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <style>
@@ -34,7 +33,7 @@
 
     .btn {
       position: absolute;
-      background: #00bfff;
+      background: #083460;
       color: white;
       border: none;
       border-radius: 50%;
@@ -141,17 +140,17 @@
     <label>Preço por m² (R$):</label>
     <input type="number" id="preco" step="0.1">
     <div id="resultado"></div>
-    <button onclick="calcular()" style="background-color: #00bfff; color: white;">Calcular Orçamento</button>
-    <button onclick="abrirPopupTelefone()" style="background-color: #25D366; color: white;">Enviar via WhatsApp</button>
-    <button onclick="limparCampos()" style="background-color: #ff4d4d; color: white;">Limpar Tudo</button>
+    <button onclick="calcular()" style="background-color: #083460; color: white;">CALCULAR ORÇAMENTO</button>
+    <button onclick="abrirPopupTelefone()" style="background-color: #25D366; color: white;">ENVIAR VIA WHATSAPPEnviar via WhatsApp</button>
+    <button onclick="limparCampos()" style="background-color: #ff4d4d; color: white;">LIMPAR TUDO</button>
   </div>
   <div id="popup">
     <div id="popup-content">
       <h3 id="popup-titulo"></h3>
       <input type="number" id="popup-input" placeholder="Digite a medida (m)">
       <br><br>
-      <button onclick="salvarValor()">Salvar</button>
-      <button onclick="fecharPopup()">Cancelar</button>
+      <button onclick="salvarValor()">SALVAR</button>
+      <button onclick="fecharPopup()">CANCELAR</button>
     </div>
   </div>
   <div id="popup-telefone">
@@ -160,7 +159,7 @@
       <input type="tel" id="numero-telefone" placeholder="Apenas números. Ex: 49984330158">
       <br><br>
       <button onclick="enviarWhatsAppFinal()">Enviar</button>
-      <button onclick="document.getElementById('popup-telefone').style.display='none'">Cancelar</button>
+      <button onclick="document.getElementById('popup-telefone').style.display='none'">CANCELAR</button>
     </div>
   </div>
   <script>
