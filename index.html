@@ -5,9 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Simulador de Pintura</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       font-family: Arial, sans-serif;
@@ -18,12 +16,8 @@
       padding: 2rem 1rem;
     }
 
-    h2 {
-      text-align: center;
-    }
-
     .container {
-      margin-top: 60px;
+      margin-top: 40px;
       position: relative;
       width: 100%;
       max-width: 400px;
@@ -44,7 +38,6 @@
       cursor: pointer;
       text-align: center;
       line-height: 40px;
-      transition: background 0.3s;
     }
 
     .btn.preenchido {
@@ -60,16 +53,11 @@
       gap: 1rem;
     }
 
-    #bottom-controls input {
+    #bottom-controls input, #bottom-controls button {
       width: 100%;
-      padding: 8px;
-      font-size: 16px;
-    }
-
-    #bottom-controls button {
       padding: 10px;
       font-size: 16px;
-      cursor: pointer;
+      border-radius: 6px;
     }
 
     #resultado {
@@ -79,14 +67,11 @@
       text-align: center;
     }
 
-    /* Popup */
     #popup {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.6);
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
       display: none;
       align-items: center;
       justify-content: center;
@@ -97,29 +82,43 @@
       background: white;
       padding: 2rem;
       border-radius: 10px;
-      text-align: center;
       width: 90%;
       max-width: 300px;
+      text-align: center;
     }
 
     #popup input {
-      width: 80%;
-      padding: 8px;
+      width: 100%;
+      padding: 10px;
       font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
     }
 
-    #popup button {
-      margin-top: 1rem;
-      margin-right: 0.5rem;
-      padding: 8px 12px;
+    #popup-content button {
+      padding: 10px 16px;
       font-size: 16px;
+      margin: 8px;
+      border: none;
+      border-radius: 6px;
       cursor: pointer;
+    }
+
+    #popup-content button:first-of-type {
+      background-color: #28a745;
+      color: white;
+    }
+
+    #popup-content button:last-of-type {
+      background-color: #dc3545;
+      color: white;
     }
   </style>
 </head>
 <body>
 
-<img src="logo-santin.png" alt="Logo Santin Soluções em Pintura" style="max-width: 250px; height: auto; margin-bottom: 20px;">
+  <img src="logo-santin.png" alt="Logo Santin Soluções em Pintura" style="max-width: 250px; margin-bottom: 20px;">
 
   <div class="container">
     <button id="btn-fundo" class="btn" style="top: -40px; left: 50%; transform: translateX(-50%);" onclick="toggleInput('fundo')">+</button>
@@ -140,11 +139,13 @@
     <label>Preço por m² (R$):</label>
     <input type="number" id="preco" step="0.1">
 
-    <button onclick="calcular()">Calcular Orçamento</button>
+    <button onclick="calcular()" style="background-color: #00bfff; color: white;">Calcular Orçamento</button>
+    <button onclick="enviarWhatsApp()" style="background-color: #25D366; color: white;">Enviar via WhatsApp</button>
+    <button onclick="limparCampos()" style="background-color: #ff4d4d; color: white;">Limpar Tudo</button>
+
     <div id="resultado"></div>
   </div>
 
-  <!-- Popup -->
   <div id="popup">
     <div id="popup-content">
       <h3 id="popup-titulo"></h3>
@@ -163,7 +164,6 @@
       document.getElementById("popup-titulo").innerText = `Informe a medida do lado ${lado.toUpperCase()}`;
       document.getElementById("popup-input").value = document.getElementById(`val-${lado}`).value || '';
       document.getElementById("popup").style.display = 'flex';
-      document.getElementById("popup-input").focus();
     }
 
     function fecharPopup() {
@@ -174,7 +174,6 @@
       const valor = document.getElementById("popup-input").value;
       const inputOriginal = document.getElementById(`val-${ladoAtual}`);
       const btn = document.getElementById(`btn-${ladoAtual}`);
-
       inputOriginal.value = valor;
 
       if (valor) {
@@ -184,7 +183,6 @@
         btn.innerText = '+';
         btn.classList.remove('preenchido');
       }
-
       fecharPopup();
     }
 
@@ -196,12 +194,51 @@
       const esquerda = parseFloat(document.getElementById("val-esquerda").value) || 0;
       const direita = parseFloat(document.getElementById("val-direita").value) || 0;
 
-      const perimetro = frente + fundo + esquerda + direita;
-      const area = perimetro * altura;
+      const area = (frente + fundo + esquerda + direita) * altura;
       const total = area * preco;
 
       document.getElementById("resultado").innerText =
         `Área total: ${area.toFixed(2)} m² | Valor estimado: R$ ${total.toFixed(2)}`;
+    }
+
+    function limparCampos() {
+      ["altura", "preco", "val-frente", "val-fundo", "val-esquerda", "val-direita"].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      document.getElementById("resultado").innerText = '';
+      ["frente", "fundo", "esquerda", "direita"].forEach(lado => {
+        const btn = document.getElementById(`btn-${lado}`);
+        btn.innerText = '+';
+        btn.classList.remove('preenchido');
+      });
+    }
+
+    function enviarWhatsApp() {
+      const altura = parseFloat(document.getElementById("altura").value) || 0;
+      const preco = parseFloat(document.getElementById("preco").value) || 0;
+      const frente = parseFloat(document.getElementById("val-frente").value) || 0;
+      const fundo = parseFloat(document.getElementById("val-fundo").value) || 0;
+      const esquerda = parseFloat(document.getElementById("val-esquerda").value) || 0;
+      const direita = parseFloat(document.getElementById("val-direita").value) || 0;
+
+      const area = (frente + fundo + esquerda + direita) * altura;
+      const total = area * preco;
+
+      const mensagem =
+        `Olá! Segue o orçamento estimado:` +
+        `%0A%0A📐 *Medidas:*` +
+        `%0A• Frente: ${frente} m` +
+        `%0A• Fundo: ${fundo} m` +
+        `%0A• Esquerda: ${esquerda} m` +
+        `%0A• Direita: ${direita} m` +
+        `%0A• Altura: ${altura} m` +
+        `%0A%0A💲 *Preço por m²:* R$ ${preco.toFixed(2)}` +
+        `%0A📐 *Área total:* ${area.toFixed(2)} m²` +
+        `%0A💵 *Valor estimado:* R$ ${total.toFixed(2)}` +
+        `%0A%0A🧰 *Santin Soluções em Pintura*`;
+
+      const numero = prompt("Digite o número do cliente com DDD (ex: 48991234567):");
+      if (numero) window.open(`https://wa.me/55${numero}?text=${mensagem}`, '_blank');
     }
   </script>
 </body>
