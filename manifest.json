@@ -1,0 +1,21 @@
+{
+  "name": "Santin Solu\u00e7\u00f5es em Pintura",
+  "short_name": "Santin Pintura",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f5f5f5",
+  "theme_color": "#8e44ad",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "splash.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

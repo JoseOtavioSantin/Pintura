@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Simulador de Pintura</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#8e44ad" />
+  <link rel="apple-touch-icon" href="icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <style>
     * { box-sizing: border-box; }
 
@@ -61,13 +65,12 @@
     }
 
     #resultado {
-      margin-top: 1rem;
       font-size: 1.2rem;
       color: green;
       text-align: center;
     }
 
-    #popup {
+    #popup, #popup-telefone {
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
@@ -78,7 +81,7 @@
       z-index: 999;
     }
 
-    #popup-content {
+    #popup-content, #popup-telefone-content {
       background: white;
       padding: 2rem;
       border-radius: 10px;
@@ -87,7 +90,7 @@
       text-align: center;
     }
 
-    #popup input {
+    #popup input, #popup-telefone input {
       width: 100%;
       padding: 10px;
       font-size: 16px;
@@ -96,7 +99,7 @@
       box-sizing: border-box;
     }
 
-    #popup-content button {
+    #popup-content button, #popup-telefone-content button {
       padding: 10px 16px;
       font-size: 16px;
       margin: 8px;
@@ -105,47 +108,41 @@
       cursor: pointer;
     }
 
-    #popup-content button:first-of-type {
+    #popup-content button:first-of-type,
+    #popup-telefone-content button:first-of-type {
       background-color: #28a745;
       color: white;
     }
 
-    #popup-content button:last-of-type {
+    #popup-content button:last-of-type,
+    #popup-telefone-content button:last-of-type {
       background-color: #dc3545;
       color: white;
     }
   </style>
 </head>
 <body>
-
   <img src="logo-santin.png" alt="Logo Santin Soluções em Pintura" style="max-width: 250px; margin-bottom: 20px;">
-
   <div class="container">
     <button id="btn-fundo" class="btn" style="top: -40px; left: 50%; transform: translateX(-50%);" onclick="toggleInput('fundo')">+</button>
     <button id="btn-frente" class="btn" style="bottom: -40px; left: 50%; transform: translateX(-50%);" onclick="toggleInput('frente')">+</button>
     <button id="btn-esquerda" class="btn" style="top: 50%; left: -10px; transform: translateY(-50%);" onclick="toggleInput('esquerda')">+</button>
     <button id="btn-direita" class="btn" style="top: 50%; right: -10px; transform: translateY(-50%);" onclick="toggleInput('direita')">+</button>
-
     <input type="hidden" id="val-fundo">
     <input type="hidden" id="val-frente">
     <input type="hidden" id="val-esquerda">
     <input type="hidden" id="val-direita">
   </div>
-
   <div id="bottom-controls">
     <label>Altura (m):</label>
     <input type="number" id="altura" step="0.1">
-
     <label>Preço por m² (R$):</label>
     <input type="number" id="preco" step="0.1">
-
-    <button onclick="calcular()" style="background-color: #00bfff; color: white;">Calcular Orçamento</button>
-    <button onclick="enviarWhatsApp()" style="background-color: #25D366; color: white;">Enviar via WhatsApp</button>
-    <button onclick="limparCampos()" style="background-color: #ff4d4d; color: white;">Limpar Tudo</button>
-
     <div id="resultado"></div>
+    <button onclick="calcular()" style="background-color: #00bfff; color: white;">Calcular Orçamento</button>
+    <button onclick="abrirPopupTelefone()" style="background-color: #25D366; color: white;">Enviar via WhatsApp</button>
+    <button onclick="limparCampos()" style="background-color: #ff4d4d; color: white;">Limpar Tudo</button>
   </div>
-
   <div id="popup">
     <div id="popup-content">
       <h3 id="popup-titulo"></h3>
@@ -155,27 +152,31 @@
       <button onclick="fecharPopup()">Cancelar</button>
     </div>
   </div>
-
+  <div id="popup-telefone">
+    <div id="popup-telefone-content">
+      <h3>Digite o telefone do cliente</h3>
+      <input type="tel" id="numero-telefone" placeholder="Apenas números. Ex: 49984330158">
+      <br><br>
+      <button onclick="enviarWhatsAppFinal()">Enviar</button>
+      <button onclick="document.getElementById('popup-telefone').style.display='none'">Cancelar</button>
+    </div>
+  </div>
   <script>
     let ladoAtual = '';
-
     function toggleInput(lado) {
       ladoAtual = lado;
       document.getElementById("popup-titulo").innerText = `Informe a medida do lado ${lado.toUpperCase()}`;
       document.getElementById("popup-input").value = document.getElementById(`val-${lado}`).value || '';
       document.getElementById("popup").style.display = 'flex';
     }
-
     function fecharPopup() {
       document.getElementById("popup").style.display = 'none';
     }
-
     function salvarValor() {
       const valor = document.getElementById("popup-input").value;
       const inputOriginal = document.getElementById(`val-${ladoAtual}`);
       const btn = document.getElementById(`btn-${ladoAtual}`);
       inputOriginal.value = valor;
-
       if (valor) {
         btn.innerText = '✔';
         btn.classList.add('preenchido');
@@ -185,7 +186,6 @@
       }
       fecharPopup();
     }
-
     function calcular() {
       const altura = parseFloat(document.getElementById("altura").value) || 0;
       const preco = parseFloat(document.getElementById("preco").value) || 0;
@@ -193,14 +193,11 @@
       const fundo = parseFloat(document.getElementById("val-fundo").value) || 0;
       const esquerda = parseFloat(document.getElementById("val-esquerda").value) || 0;
       const direita = parseFloat(document.getElementById("val-direita").value) || 0;
-
       const area = (frente + fundo + esquerda + direita) * altura;
       const total = area * preco;
-
       document.getElementById("resultado").innerText =
         `Área total: ${area.toFixed(2)} m² | Valor estimado: R$ ${total.toFixed(2)}`;
     }
-
     function limparCampos() {
       ["altura", "preco", "val-frente", "val-fundo", "val-esquerda", "val-direita"].forEach(id => {
         document.getElementById(id).value = '';
@@ -212,18 +209,20 @@
         btn.classList.remove('preenchido');
       });
     }
-
-    function enviarWhatsApp() {
+    function abrirPopupTelefone() {
+      document.getElementById("popup-telefone").style.display = 'flex';
+    }
+    function enviarWhatsAppFinal() {
+      const numero = document.getElementById("numero-telefone").value;
+      document.getElementById("popup-telefone").style.display = 'none';
       const altura = parseFloat(document.getElementById("altura").value) || 0;
       const preco = parseFloat(document.getElementById("preco").value) || 0;
       const frente = parseFloat(document.getElementById("val-frente").value) || 0;
       const fundo = parseFloat(document.getElementById("val-fundo").value) || 0;
       const esquerda = parseFloat(document.getElementById("val-esquerda").value) || 0;
       const direita = parseFloat(document.getElementById("val-direita").value) || 0;
-
       const area = (frente + fundo + esquerda + direita) * altura;
       const total = area * preco;
-
       const mensagem =
         `Olá! Segue o orçamento estimado:` +
         `%0A%0A📐 *Medidas:*` +
@@ -236,9 +235,12 @@
         `%0A📐 *Área total:* ${area.toFixed(2)} m²` +
         `%0A💵 *Valor estimado:* R$ ${total.toFixed(2)}` +
         `%0A%0A🧰 *Santin Soluções em Pintura*`;
-
-      const numero = prompt("Digite o número do cliente com DDD (ex: 48991234567):");
       if (numero) window.open(`https://wa.me/55${numero}?text=${mensagem}`, '_blank');
+    }
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(() => console.log("Service Worker registrado com sucesso."))
+        .catch(error => console.error("Erro ao registrar Service Worker:", error));
     }
   </script>
 </body>
